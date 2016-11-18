@@ -55,7 +55,7 @@ impl From<LenientBool> for bool {
 }
 
 impl From<bool> for LenientBool {
-    fn from(b: bool) -> bool { LenientBool(b) }
+    fn from(b: bool) -> LenientBool { LenientBool(b) }
 }
 
 impl AsRef<bool> for LenientBool {
