@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/lenient_bool.svg)](https://crates.io/crates/lenient_bool)
 
-This create provides the LenientBool type, which converts the following values into a boolean:
+This crate provides the LenientBool type, which converts the following values into a boolean:
 
 * true
 * false
