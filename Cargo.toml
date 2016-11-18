@@ -2,7 +2,7 @@
 name = "lenient_bool"
 version = "0.1.0"
 authors = ["Daniel Imfeld <daniel@danielimfeld.com>"]
-license = "MIT/Apache2.0"
+license = "MIT/Apache-2.0"
 description = "A bool parser that is more accepting of various string bool representations."
 repository = "https://github.com/dimfeld/rust_lenient_bool"
 readme = "README.md"
