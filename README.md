@@ -2,14 +2,10 @@
 
 [![crates.io](https://img.shields.io/crates/v/lenient_bool.svg)](https://crates.io/crates/lenient_bool)
 
-This crate provides the LenientBool type, which converts the following values into a boolean:
+This crate provides the LenientBool type, which performs the following string -> bool conversions:
 
-* true
-* false
-* t
-* f
-* 0
-* 1
+* true, t, yes, y, and 1 to `true`
+* false, f, no, n, and 0 to `false`
 
 Comparisons are case-insensitive, so `TRUE`, `tRue`, and `T` all work, for example.
 
