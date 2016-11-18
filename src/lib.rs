@@ -1,7 +1,7 @@
 //! This module provides a single type, `LenientBool`, which implements `FromStr` to convert
 //! a string into a boolean. It is more accepting of various boolean representations than
 //! the standard bool function, performing case-insensitive matches
-//! against `true`, `false`, `t`, and `f`, and also matches `0` and `1`.
+//! against `true`, `false`, `t`, and `f`, `yes`, `no`, `y`, `n`, `0`, and `1`.
 //!
 //! # Errors
 //! Any string not matching the above list will return a `LenientBoolError`.
@@ -18,12 +18,12 @@
 //! }
 //! ```
 
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 use std::ascii::AsciiExt;
 use std::str::FromStr;
 
-#[derive(Debug, PartialEq, Eq)]
-pub struct LenientBool(bool);
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash, Default)]
+pub struct LenientBool(pub bool);
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct LenientBoolError(());
@@ -31,24 +31,55 @@ pub struct LenientBoolError(());
 impl FromStr for LenientBool {
     type Err = LenientBoolError;
     fn from_str(s: &str) -> Result<Self, LenientBoolError> {
-        if s.eq_ignore_ascii_case("true") { Ok(LenientBool(true)) }
-        else if s.eq_ignore_ascii_case("false") { Ok(LenientBool(false)) }
-        else if s.eq_ignore_ascii_case("t") { Ok(LenientBool(true)) }
-        else if s.eq_ignore_ascii_case("f") { Ok(LenientBool(false)) }
-        else if s == "1" { Ok(LenientBool(true)) }
-        else if s == "0" { Ok(LenientBool(false)) }
-        else { Err(LenientBoolError(())) }
+        if s.eq_ignore_ascii_case("true")
+        || s.eq_ignore_ascii_case("t")
+        || s.eq_ignore_ascii_case("yes")
+        || s.eq_ignore_ascii_case("y")
+        || s == "1" {
+            Ok(LenientBool(true))
+        } else
+        if s.eq_ignore_ascii_case("false")
+        || s.eq_ignore_ascii_case("f")
+        || s.eq_ignore_ascii_case("no")
+        || s.eq_ignore_ascii_case("n")
+        || s == "0" {
+            Ok(LenientBool(false))
+        } else {
+            Err(LenientBoolError(()))
+        }
     }
 }
 
 impl From<LenientBool> for bool {
-    fn from(n : LenientBool) -> bool { n.0 }
+    fn from(n: LenientBool) -> bool { n.0 }
+}
+
+impl From<bool> for LenientBool {
+    fn from(b: bool) -> bool { LenientBool(b) }
+}
+
+impl AsRef<bool> for LenientBool {
+    fn as_ref(&self) -> &bool {
+        &self.0
+    }
+}
+
+impl AsMut<bool> for LenientBool {
+    fn as_mut(&mut self) -> &mut bool {
+        &mut self.0
+    }
 }
 
 impl Deref for LenientBool {
     type Target = bool;
     fn deref(&self) -> &Self::Target {
         &self.0
+    }
+}
+
+impl DerefMut for LenientBool {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }
 
@@ -82,6 +113,31 @@ mod test {
     }
 
     #[test]
+    fn parse_n() {
+        assert_eq!("n".parse::<LenientBool>(), Ok(LenientBool(false)));
+    }
+
+    #[test]
+    fn parse_n_upper() {
+        assert_eq!("N".parse::<LenientBool>(), Ok(LenientBool(false)));
+    }
+
+    #[test]
+    fn parse_no() {
+        assert_eq!("no".parse::<LenientBool>(), Ok(LenientBool(false)));
+    }
+
+    #[test]
+    fn parse_no_cap() {
+        assert_eq!("No".parse::<LenientBool>(), Ok(LenientBool(false)));
+    }
+
+    #[test]
+    fn parse_no_upper() {
+        assert_eq!("NO".parse::<LenientBool>(), Ok(LenientBool(false)));
+    }
+
+    #[test]
     fn parse_0() {
         assert_eq!("0".parse::<LenientBool>(), Ok(LenientBool(false)));
     }
@@ -109,6 +165,31 @@ mod test {
     #[test]
     fn parse_true_upper() {
         assert_eq!("TRUE".parse::<LenientBool>(), Ok(LenientBool(true)));
+    }
+
+    #[test]
+    fn parse_y() {
+        assert_eq!("y".parse::<LenientBool>(), Ok(LenientBool(true)));
+    }
+
+    #[test]
+    fn parse_y_upper() {
+        assert_eq!("Y".parse::<LenientBool>(), Ok(LenientBool(true)));
+    }
+
+    #[test]
+    fn parse_yes() {
+        assert_eq!("yes".parse::<LenientBool>(), Ok(LenientBool(true)));
+    }
+
+    #[test]
+    fn parse_yes_cap() {
+        assert_eq!("Yes".parse::<LenientBool>(), Ok(LenientBool(true)));
+    }
+
+    #[test]
+    fn parse_yes_upper() {
+        assert_eq!("YES".parse::<LenientBool>(), Ok(LenientBool(true)));
     }
 
     #[test]
