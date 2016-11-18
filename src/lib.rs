@@ -11,9 +11,10 @@
 //! ```
 //! extern crate lenient_bool;
 //! use lenient_bool::LenientBool;
+//!
 //! fn main() {
-//! let b : bool = "1".parse::<LenientBool>().unwrap().into();
-//! assert_eq!(b, true);
+//!     let b : bool = "1".parse::<LenientBool>().unwrap().into();
+//!     assert_eq!(b, true);
 //! }
 //! ```
 
