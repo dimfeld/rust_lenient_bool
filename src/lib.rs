@@ -1,7 +1,7 @@
 //! This module provides a single type, `LenientBool`, which implements `FromStr` to convert
 //! a string into a boolean. It is more accepting of various boolean representations than
 //! the standard bool function, performing case-insensitive matches
-//! against `true`, `false`, `t`, and `f`, `yes`, `no`, `y`, `n`, `0`, and `1`.
+//! against `true`, `false`, `t`, `f`, `yes`, `no`, `y`, `n`, `0`, and `1`.
 //!
 //! # Errors
 //! Any string not matching the above list will return a `LenientBoolError`.
